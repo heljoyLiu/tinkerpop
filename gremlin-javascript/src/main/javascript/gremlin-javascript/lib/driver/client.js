@@ -71,7 +71,7 @@ class Client {
    * @param {Object} [bindings] The script bindings, if any.
    * @returns {Promise}
    */
-  submit(message, bindings) {
+  submit(message, bindings, timeout) {
     if (typeof message === 'string') {
       const args = {
         'gremlin': message,
@@ -82,6 +82,9 @@ class Client {
       };
       if (this._options.session && this._options.processor === 'session') {
         args['session'] = this._options.session;
+      }
+      if (timeout !== undefined) {
+        args['scriptEvaluationTime'] = timeout;
       }
 
       return this._connection.submit(null, 'eval', args, null, this._options.processor || '');
